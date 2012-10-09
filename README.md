@@ -7,7 +7,7 @@ The Zedram Language can be parsed by other languages (such as Perl, C, Java, PHP
 
 This project is currently pre-alpha and written in Perl6.
 
-http://zysys.org/wiki/index.php/The_Zedram_Langague
+http://zysys.org/wiki/index.php/The_Zedram_Language
 
 Current To-Do
 =============
