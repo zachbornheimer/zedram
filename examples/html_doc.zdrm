@@ -1,0 +1,25 @@
+grammar:grammar.zyg
+constants:constants.zyc
+html_doc is a framework containing {
+        use intelligent design
+            include:javascript:javascript.js
+                include:css:style.css
+                    method:span:inline
+}
+method span($syleClass, $content) {
+        exp span att:$styleClass $content
+}
+
+init:html_doc
+exp properxhtml
+exp super:"html"
+exp "head" {
+        include everything
+            exp "title" "Site Title"
+}
+exp "body" {
+        exp 10-times {
+                    span("span".$_, $_)
+                        }
+}
+end

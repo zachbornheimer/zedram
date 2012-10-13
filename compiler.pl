@@ -4,8 +4,8 @@
 
 use Zedram::Parser;
 
-my $grammarFile = "grammar.zyg";
-my $testFile = "html_doc.zdrm";
+my $grammarFile = "examples/grammar.zyg";
+my $testFile = "examples/html_doc.zdrm";
 
 my $zedramParser = ZedramParser.new(:grammarFile($grammarFile));
 $zedramParser.prep();

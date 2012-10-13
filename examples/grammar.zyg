@@ -1,0 +1,8 @@
+use english grammar
+grammar_delimiter->->
+parser_delimiter->:
+line_ending_delimiter->NONE
+block_delimiter->{}
+concatenate->.
+var_prefix->$
+default_variable->_

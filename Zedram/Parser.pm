@@ -17,13 +17,10 @@ class ZedramParser is ZedramGrammar is export {
     }
 
 
-    sub parse_grammar($grammarFile = "grammar.zyg") {
+    sub parse_grammar($grammarFile) {
         my @GRAMMAR_FILE;
-        my $GRAMMAR_FILE = open $grammarFile, :r;
-        for $GRAMMAR_FILE.lines -> $_ {
-            push @GRAMMAR_FILE, $_;
-        }
-        $GRAMMAR_FILE.close;
+        @GRAMMAR_FILE = lines slurp $grammarFile;
+
         for @GRAMMAR_FILE {
             chomp($_);
             if zedram_grammar_grammar.parse($_, :rule<identify_grammar_delimiter>) {
@@ -64,7 +61,7 @@ class ZedramParser is ZedramGrammar is export {
         $t ~~ s:g/^(.)/{ uc($0) }/;
         $t ~~ s:g/_(.)/{ uc($0) }/;
         $t ~~ s:g/_//;
-        $v ~~ s:i/^NONE$//;
+        $v ~~ s:i/NONE$//;
         ParserProperty($t, $v);
     }
 }
