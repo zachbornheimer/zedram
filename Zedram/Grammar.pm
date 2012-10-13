@@ -6,8 +6,8 @@ module Zedram::Grammar;
 class ZedramGrammar is export {
     our %ParserProperties is export;
 
-# Default variable assignments
-# These are overidden by options parsed in the supplied grammar (unless it isn't supplied) 
+    # Default variable assignments
+    # These are overidden by options parsed in the supplied grammar (unless it isn't supplied) 
     GrammarDelimiter('->');
     ParserProperty('ParserDelimiter', ':');
     ParserProperty('LineEndingDelimiter', '');
