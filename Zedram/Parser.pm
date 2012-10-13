@@ -17,7 +17,7 @@ class ZedramParser is ZedramGrammar is export {
     }
 
 
-    sub parse_grammar($grammarFile = "grammar.zyg") is export {
+    sub parse_grammar($grammarFile = "grammar.zyg") {
         my @GRAMMAR_FILE;
         my $GRAMMAR_FILE = open $grammarFile, :r;
         for $GRAMMAR_FILE.lines -> $_ {
@@ -32,7 +32,7 @@ class ZedramParser is ZedramGrammar is export {
             }
         }
 
-# After we have the grammar_delimiter, we should parse the settings
+        # After we have the grammar_delimiter, we should parse the settings
         for @GRAMMAR_FILE {
             chomp($_);
             my $alpha = zedram_grammar_grammar.parse($_);
@@ -42,7 +42,7 @@ class ZedramParser is ZedramGrammar is export {
         }
     }
 
-    sub dispParams() is export {
+    sub dispParams() {
         my @grammarUnits = ('GrammarDelimiter', 'ParserDelimiter', 'LineEndingDelimiter', 'BlockDelimiter', 'Concatenate', 'VarPrefix', 'DefaultVariable');
         for @grammarUnits { 
             if defined ParserProperty($_) {
@@ -56,7 +56,7 @@ class ZedramParser is ZedramGrammar is export {
         return ~($0).substr(0, ~($0).chars / 2);
     }
     
-# This returns the variable name so it can be appended to an array and exported out of the module.
+    # This returns the variable name so it can be appended to an array and exported out of the module.
     sub change_parser_using_token ($token, $value) {
         my $t = ~($token);
         my $v = ~($value);
