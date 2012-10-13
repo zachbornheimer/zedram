@@ -9,6 +9,10 @@ This project is currently pre-alpha and written in Perl6.
 
 http://zysys.org/wiki/index.php/The_Zedram_Language
 
+
+Note, if you cannot access the Zedram::Grammar or Zedram::Parser modules, make sure to include . in your path.
+You may have to run `perl6 -I . compiler.pl` to test the program as opposed to `perl6 compiler.pl`
+
 Current To-Do
 =============
 
