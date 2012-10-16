@@ -1,0 +1,15 @@
+Purpose
+=======
+
+The purpose of this document is to allow for the description of some of the paradigms used in the language and also to allow for the documentation of reasoning behind some of the design philosophy.
+
+Block Identification
+====================
+
+[NOT YET IMPLEMENTED]
+Identification of blocks seems rather tricky.  Every time you try and identify a block, you may be identifying part of a sub block.  The easiest method to do for this is to do a tail-recursive algorithm to run on each sub block.  When the parser finds a block, it will automatically keep looking line by line for an indication of a sub block.  If it finds that indication, it repeats the last step.  If not, it proceeds looking for an indication of the termination of that block.  It will then parse the innermost block first then work its way out (this should be optimized before leaving the sub-block.  By the time it leaves all blocks, it should have parsed all sub-blocks and be ready to move onto the next line after the block.
+
+Evolution
+=========
+
+The purpose of the evolutionary aspect of the langage is to allow it to morph.  The beauty of most surviving languages is that most are related.  The point of the redefinability of the grammar.zgy file is to allow a user or group to be able to redefine the language based on what they want to use (which may be based on a language that they are programming in).  By allowing this language to develop, it will be able to adapt syntactically over time (as opposed ot some other languages who die because of syntax that is unusable).
