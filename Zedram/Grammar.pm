@@ -52,4 +52,30 @@ class ZedramGrammar is export {
         token value {.*}
         token grammarDelimiter { {ParserProperty('GrammarDelimiter')} }
     }
+
+    grammar zedram_grammar_core is export {
+        rule TOP {
+            <statement> | <declaration> | <block>
+        }
+        token statement { <keyword>{ ParserProperty('ParserDelimiter') }(.*){ ParserProperty('LineEndingDelimiter') } }
+        token declaration { <keyword> (<modifier>|.*) }
+        proto token keyword {*}
+        token keyword:sym<grammar> { <sym> }
+        token keyword:sym<constants> { <sym> }
+        token keyword:sym<framework> { <sym> }
+        token keyword:sym<include> { <sym> }
+        token keyword:sym<method> { <sym> }
+        token keyword:sym<exp> { <sym> }
+# Let's test to see if conditionals work in grammar
+        if (~ParserProperty('BlockDelimiter') ne "") {
+            token block {
+                <declaration> { ~ParserProperty('BlockDelimiter').substr(0, ~ParserProperty('BlockDelimiter').chars / 2) } .* { ~ParserProperty('BlockDelimiter').substr(~ParserProperty('BlockDelimiter').chars / 2) }
+            }
+        } else {
+            token block {
+                <declaration>(\n{ ParserProperty('WhitespaceDelimiter'); })*
+            }
+        }
+    }
 }
+
