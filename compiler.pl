@@ -10,3 +10,8 @@ my $testFile = "examples/html_doc.zdrm";
 my $zedramParser = ZedramParser.new(:grammarFile($grammarFile));
 $zedramParser.prep();
 $zedramParser.test();
+
+# Eventually:
+# $zedramParser.read($testFile);
+# # Compiler!
+# $zedramParser.compileTo("html"); # or $zedramParser.compileTo("xml");
