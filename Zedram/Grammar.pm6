@@ -66,16 +66,16 @@ class ZedramGrammar is export {
         token keyword:sym<include> { <sym> }
         token keyword:sym<method> { <sym> }
         token keyword:sym<exp> { <sym> }
-# Let's test to see if conditionals work in grammar
+        token block { <{ _blockTokenRule() }> }
+    }
+
+    sub _blockTokenRule {
         if (~ParserProperty('BlockDelimiter') ne "") {
-            token block {
-                <declaration> { ~ParserProperty('BlockDelimiter').substr(0, ~ParserProperty('BlockDelimiter').chars / 2) } .* { ~ParserProperty('BlockDelimiter').substr(~ParserProperty('BlockDelimiter').chars / 2) }
-            }
+            return rule { <declaration> { ~ParserProperty('BlockDelimiter').substr(0, ~ParserProperty('BlockDelimiter').chars / 2) } .* { ~ParserProperty('BlockDelimiter').substr(~ParserProperty('BlockDelimiter').chars / 2) }}
         } else {
-            token block {
-                <declaration>(\n{ ParserProperty('WhitespaceDelimiter'); })*
-            }
+            return rule { <declaration>(\n{ ParserProperty('WhitespaceDelimiter'); })*}
         }
     }
 }
+
 
