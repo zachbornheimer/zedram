@@ -16,6 +16,7 @@ class ZedramGrammar is export {
     ParserProperty('VarPrefix', '$');
     ParserProperty('DefaultVariable', '_');
     ParserProperty('WhitespaceDelimiter', '    ');
+    ParserProperty('ListDelimiter', ',');
 
     sub ParserProperty($property, $value?) is export {
         %ParserProperties{$property} = $value if $value;
@@ -49,6 +50,7 @@ class ZedramGrammar is export {
         token setting:sym<concatenation_symbol> { <sym> }
         token setting:sym<var_prefix> { <sym> }
         token setting:sym<default_variable> { <sym> }
+        token setting:sym<list_delimiter> { <sym> }
         token value {.*}
         token grammarDelimiter { {ParserProperty('GrammarDelimiter')} }
     }

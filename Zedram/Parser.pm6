@@ -40,10 +40,10 @@ class ZedramParser is ZedramGrammar is export {
     }
 
     sub dispParams() {
-        my @grammarUnits = ('GrammarDelimiter', 'ParserDelimiter', 'LineEndingDelimiter', 'BlockDelimiter', 'Concatenate', 'VarPrefix', 'DefaultVariable');
+        my @grammarUnits = ('GrammarDelimiter', 'ParserDelimiter', 'LineEndingDelimiter', 'BlockDelimiter', 'Concatenate', 'VarPrefix', 'DefaultVariable', 'ListDelimiter');
         for @grammarUnits { 
             if defined ParserProperty($_) {
-                say $_ ~ ParserProperty($_);
+                say $_ ~ GrammarDelimiter() ~ ParserProperty($_);
             }
         }
     }
@@ -62,6 +62,7 @@ class ZedramParser is ZedramGrammar is export {
         $t ~~ s:g/_(.)/{ uc($0) }/;
         $t ~~ s:g/_//;
         $v ~~ s:i/NONE$//;
+        $v ~~ s/{return GrammarDelimiter()}//;
         ParserProperty($t, $v);
     }
 }
