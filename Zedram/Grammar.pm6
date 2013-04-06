@@ -68,6 +68,8 @@ class ZedramGrammar is export {
         token keyword:sym<include> { <sym> }
         token keyword:sym<method> { <sym> }
         token keyword:sym<exp> { <sym> }
+        token keyword:sym<literal> { <sym> }
+        token keyword:sym<map> { <sym> }
         token block { <{ _blockTokenRule() }> }
     }
 

@@ -1,13 +1,13 @@
 grammar:grammar.zyg
-constants:constants.zyc
-html_doc is a framework containing {
-    use intelligent design
-        include:javascript:javascript.js
-        include:css:style.css
-        method:span:inline
+constants:constants.zyc,externconst.zyc
+framework html_doc {
+    include:javascript:javascript.js
+    include:css:style.css
+    method:span:inline
+    map:literal:att
 }
 method span($syleClass, $content) {
-    exp span att:$styleClass $content
+    exp span att:class:$styleClass $content
 }
 
 init:html_doc

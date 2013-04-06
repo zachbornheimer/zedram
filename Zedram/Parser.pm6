@@ -5,9 +5,10 @@ use Zedram::Grammar;
 
 class ZedramParser is ZedramGrammar is export {
     has $.grammarFile;
+    has $!zedramFilename;
 
     method prep() {
-        parse_grammar($.grammarFile);
+        parse_grammar($!grammarFile);
         return 1;
     }
 
@@ -16,6 +17,22 @@ class ZedramParser is ZedramGrammar is export {
         return 1;
     }
 
+    method read($file) {
+        $!zedramFilename = $file;
+
+        # determine grammar.zyg
+        # determine constants.zyc
+        # get framework declaration
+        #   get includes
+        #   get methods
+        #   build includes hash
+        #   build methods replacement regex
+        
+    }
+
+    method compileTo($lang) {
+        # XML and HTML so far
+    }
 
     sub parse_grammar($grammarFile) {
         my @GRAMMAR_FILE;

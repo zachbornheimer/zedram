@@ -12,6 +12,6 @@ $zedramParser.prep();
 $zedramParser.test();
 
 # Eventually:
-# $zedramParser.read($testFile);
+$zedramParser.read($testFile);
 # # Compiler!
 # $zedramParser.compileTo("html"); # or $zedramParser.compileTo("xml");
