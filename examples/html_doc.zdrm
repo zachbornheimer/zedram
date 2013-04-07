@@ -1,18 +1,17 @@
-grammar:grammar.zyg
-constants:constants.zyc,externconst.zyc
+constants constants.zyc,externconst.zyc
 framework html_doc {
-    include:javascript:javascript.js
-    include:css:style.css
-    method:span:inline
-    map:literal:att
+    include javascript javascript.js
+    include css style.css
+    method span inline
+    map literal att
 }
 method span($syleClass, $content) {
-    exp span att:class:$styleClass $content
+    exp span att class $styleClass $content
 }
 
-init:html_doc
+init html_doc
 exp properxhtml
-exp super:"html"
+exp super "html"
 exp "head" {
     include everything
         exp "title" "Site Title"

@@ -57,10 +57,12 @@ class ZedramGrammar is export {
 
     grammar zedram_grammar_core is export {
         rule TOP {
-            <statement> | <declaration> | <block>
+            <statement>
         }
-        token statement { <keyword>{ ParserProperty('ParserDelimiter') }(.*){ ParserProperty('LineEndingDelimiter') } }
+        token delimiter { : }
+        token argument { \:.*? }
         token declaration { <keyword> (<modifier>|.*) }
+        token statement { <keyword>(.*)$ }
         proto token keyword {*}
         token keyword:sym<grammar> { <sym> }
         token keyword:sym<constants> { <sym> }
@@ -80,6 +82,7 @@ class ZedramGrammar is export {
             return rule { <declaration>(\n{ ParserProperty('WhitespaceDelimiter'); })*}
         }
     }
+
 }
 
 

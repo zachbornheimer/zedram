@@ -16,5 +16,8 @@ You may have to run `perl6 -I . compiler.pl6` to test the program as opposed to 
 Current To-Do
 =============
 
+* Create a module to unify keyword changes
+* Create a module to unify implementations of keyword functions [what does constant do, for example]
+* Implement previous two modules
 * HTML Compiler
 * XML Compiler

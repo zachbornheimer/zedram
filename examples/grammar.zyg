@@ -1,6 +1,6 @@
 use english grammar
 grammar_delimiter->->
-parser_delimiter->:
+parser_delimiter-> 
 line_ending_delimiter->NONE
 block_delimiter->{}
 concatenate->.
