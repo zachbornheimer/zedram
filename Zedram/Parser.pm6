@@ -2,6 +2,7 @@
 # The purpose of this module is to generate a parser for Zedram.
 use v6;
 use Zedram::Grammar;
+use Zedram::Semantics;
 
 class ZedramParser is ZedramGrammar is export {
     has $.grammarFile;
@@ -27,11 +28,14 @@ class ZedramParser is ZedramGrammar is export {
         for @contents {
             my $parsed = zedram_grammar_core.parse($_);
             if $parsed<statement><keyword> && $parsed<statement><keyword> eq 'constants' {
+                analyze($parsed, %map);
+                say %map.perl;
+                exit;
                 my $constString = $parsed<statement><keyword>.orig;
                 my @files = $constString.split(ParserProperty('ListDelimiter'));
                 @files[0] ~~ s/^.*?\://;
                 for @files {
-                    parseIntoHash(%constants.item, $_);
+                    #  parseIntoHash(%constants.item, $_);
                 }
             }
         }
@@ -43,15 +47,7 @@ class ZedramParser is ZedramGrammar is export {
 
     }
 
-    sub parseIntoHash($hash, $filename) {
-        my $file = slurp $filename if $filename.IO ~~ :e;
-        if $file {
-            my @lines = $file.split(ParserProperty('LineEndingDelimiter'));
-            for @lines {
-                $hash{$_.split(ParserProperty('ParserDelimiter'))[0]} = $_.split(ParserProperty('ParserDelimiter'))[1];
-            }
-        }
-    }
+
 
     method compileTo($lang) {
         # XML and HTML so far
