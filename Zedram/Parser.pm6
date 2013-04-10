@@ -4,7 +4,7 @@ use v6;
 use Zedram::Grammar;
 use Zedram::Semantics;
 
-class ZedramParser is ZedramGrammar is export {
+class ZedramParser is ZedramGrammar is ZedramSemantics is export {
     has $.grammarFile;
     has $!zedramFilename;
 
@@ -27,17 +27,7 @@ class ZedramParser is ZedramGrammar is export {
         # determine constants.zyc
         for @contents {
             my $parsed = zedram_grammar_core.parse($_);
-            if $parsed<statement><keyword> && $parsed<statement><keyword> eq 'constants' {
-                analyze($parsed, %map);
-                say %map.perl;
-                exit;
-                my $constString = $parsed<statement><keyword>.orig;
-                my @files = $constString.split(ParserProperty('ListDelimiter'));
-                @files[0] ~~ s/^.*?\://;
-                for @files {
-                    #  parseIntoHash(%constants.item, $_);
-                }
-            }
+            analyze($parsed, %map); # All methods for keywords presented will be executed
         }
         # get framework declaration
         #   get includes
