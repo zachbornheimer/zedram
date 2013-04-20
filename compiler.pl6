@@ -8,7 +8,6 @@ my $grammarFile = "examples/grammar.zyg";
 my $testFile = "examples/html_doc.zdrm";
 
 my $zedramParser = ZedramParser.new(:grammarFile($grammarFile));
-$zedramParser.prep();
 $zedramParser.test();
 
 # Eventually:

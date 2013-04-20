@@ -8,9 +8,8 @@ class ZedramParser is ZedramGrammar is ZedramSemantics is export {
     has $.grammarFile;
     has $!zedramFilename;
 
-    method prep() {
+    submethod BUILD(:$!grammarFile) {
         parse_grammar($!grammarFile);
-        return 1;
     }
 
     method test() {
@@ -19,15 +18,41 @@ class ZedramParser is ZedramGrammar is ZedramSemantics is export {
     }
 
     method read($file) {
+
+        # Purpose is to expand the compressed Zedram file
+        # Replace mappings,
+        # compress blocks
+        # split lines into an array where blocks create a multidimensional array
+        # apply the framework to the expansion.
+
         $!zedramFilename = $file;
-        my @contents = lines slurp $!zedramFilename;
+        my $f = slurp $!zedramFilename;
+        my @contents = $f.lines;
+
+
+
+        # Procedure for splitting:
+        # Go through each character and look for the first half of the block delimiter
+        # Store all characters up to the line delimiter.  Increment Array Index for each Line Delimiter.
+        # If begin block, do not increment the index until close block.
+        
+        # Analyze blocks to determine if they are implementation of methods
+        # Expand all non-blocks re: mappings
+        # Expand all block internals re: mappings
+        # Expand all non-blocks and blocks re methods
+        # Expand loop blocks
+        
+        # Compile to Expanded Zedram
+
+        
         my %constants;
         my %map;
         # store:
         # determine constants.zyc
         for @contents {
             my $parsed = zedram_grammar_core.parse($_);
-            analyze($parsed, %map); # All methods for keywords presented will be executed
+            # All methods for keywords presented will be executed
+            analyze($parsed, %map);
         }
         # get framework declaration
         #   get includes
@@ -60,7 +85,6 @@ class ZedramParser is ZedramGrammar is ZedramSemantics is export {
             chomp($_);
             my $alpha = zedram_grammar_grammar.parse($_);
             if ($alpha<setting><sym>) { # if the setting is valid
-                say $alpha<value>;
                 change_parser_using_token($alpha<setting><sym>, $alpha<value>); # override the default
             }
         }
@@ -90,6 +114,7 @@ class ZedramParser is ZedramGrammar is ZedramSemantics is export {
         $t ~~ s:g/_//;
         $v ~~ s:i/NONE$//;
         $_ = GrammarDelimiter();
+say $t~ $v.substr(($_.chars/2)+1);
         ParserProperty($t, $v.substr(($_.chars/2)+1));
     }
 }
