@@ -1,5 +1,6 @@
 #!/usr/local/bin/perl6
-# The purpose of this module is to generate a parser for Zedram.
+# Written by Z. Bornheimer (Zysys)
+# The purpose of this module is to describe the semantics of Zedram
 use v6;
 use Zedram::Grammar;
 
@@ -23,9 +24,9 @@ class ZedramSemantics is export {
             $cmd ~~ s/^\s*//;
             my $commandString = $cmd.substr(1+($parsed<statement><keyword><sym>).chars);
             my $func = '&' ~ $parsed<statement><keyword><sym> ~ "('" ~ $commandString ~ "', " ~ $map.perl ~ ")"if $parsed<statement><keyword> && $parsed<statement><keyword>;
-            my %alpha;
+            my %alpha; # the new map
             try {
-                %alpha = $func.eval;
+                    %alpha = $func.eval;
             }
 
             CATCH {

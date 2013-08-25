@@ -1,4 +1,5 @@
 #!/usr/local/bin/perl6
+# Written by Z. Bornheimer (Zysys)
 # The purpose of this module is to define the grammar for Zedram.
 use v6;
 module Zedram::Grammar;
@@ -10,7 +11,7 @@ class ZedramGrammar is export {
     # These are overidden by options parsed in the supplied grammar (unless it isn't supplied) 
     GrammarDelimiter('->');
     ParserProperty('ParserDelimiter', ':');
-    ParserProperty('LineEndingDelimiter', '');
+    ParserProperty('LineEndingDelimiter', '\n');
     ParserProperty('BlockDelimiter', '{}');
     ParserProperty('ConcatenationSymbol', '.');
     ParserProperty('VarPrefix', '$');
@@ -56,6 +57,7 @@ class ZedramGrammar is export {
     }
 
     grammar zedram_grammar_core is export {
+        # Where to include block?
         rule TOP {
             <statement>
         }
@@ -77,12 +79,10 @@ class ZedramGrammar is export {
 
     sub _blockTokenRule {
         if (~ParserProperty('BlockDelimiter') ne "") {
-            return rule { <declaration> { ~ParserProperty('BlockDelimiter').substr(0, ~ParserProperty('BlockDelimiter').chars / 2) } .* { ~ParserProperty('BlockDelimiter').substr(~ParserProperty('BlockDelimiter').chars / 2) }}
+            return rule { <declaration> < ~ParserProperty('BlockDelimiter').substr(0, ~ParserProperty('BlockDelimiter').chars / 2) > .* < ~ParserProperty('BlockDelimiter').substr(~ParserProperty('BlockDelimiter').chars / 2) >}
         } else {
-            return rule { <declaration>(\n{ ParserProperty('WhitespaceDelimiter'); })*}
+            return rule { <declaration>(\n< ParserProperty('WhitespaceDelimiter'); >)*}
         }
     }
-
 }
-
 

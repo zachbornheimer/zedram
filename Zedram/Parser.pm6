@@ -1,15 +1,30 @@
 #!/usr/local/bin/perl6
+# Written by Z. Bornheimer (Zysys)
 # The purpose of this module is to generate a parser for Zedram.
 use v6;
 use Zedram::Grammar;
 use Zedram::Semantics;
+
+sub escape($string) is export {
+    my @metachars = '{}\\\/\'\"\?'.split('').uniq;
+    my @str = $string.split('');
+    for @str -> $_ is rw {
+        for @metachars -> $meta {
+            if ($meta eq $_) {
+                $_ = ~('\\'  ~ $_);
+                $_ ~~ s:g/\\\\/\\/;
+            }
+        }
+    }
+    return @str.join('');
+}
 
 class ZedramParser is ZedramGrammar is ZedramSemantics is export {
     has $.grammarFile;
     has $!zedramFilename;
 
     submethod BUILD(:$!grammarFile) {
-        parse_grammar($!grammarFile);
+        parse_grammar($!grammarFile) if $!grammarFile;
     }
 
     method test() {
@@ -17,19 +32,25 @@ class ZedramParser is ZedramGrammar is ZedramSemantics is export {
         return 1;
     }
 
-    method read($file) {
+    method expand($file) {
 
         # Purpose is to expand the compressed Zedram file
+        # Add curly braces where necessary
         # Replace mappings,
         # compress blocks
+        #   compress blocks so that they can be passes in analyze()
+        #   analyze parses the keyword then the statement or block
         # split lines into an array where blocks create a multidimensional array
         # apply the framework to the expansion.
 
         $!zedramFilename = $file;
         my $f = slurp $!zedramFilename;
-        my @contents = $f.lines;
 
+        $f ~~ s:g/<{~ParserProperty('LineEndingDelimiter')}>*(<{~escape(~ParserProperty('BlockDelimiter').substr(0, ~ParserProperty('BlockDelimiter').chars / 2 ))}>)<{~ParserProperty('LineEndingDelimiter')}>*/$0/;
+        #$f ~~ s:g/<{~ParserProperty('LineEndingDelimiter')}>*(<{~escape(~ParserProperty('BlockDelimiter').substr(ParserProperty('BlockDelimiter').chars / 2 ))}>)<{~ParserProperty('LineEndingDelimiter')}>*/$0/;
+        $f.say;
 
+        # Add Semicolons at the end of blocks if they do not exist
 
         # Procedure for splitting:
         # Go through each character and look for the first half of the block delimiter
@@ -49,11 +70,12 @@ class ZedramParser is ZedramGrammar is ZedramSemantics is export {
         my %map;
         # store:
         # determine constants.zyc
-        for @contents {
-            my $parsed = zedram_grammar_core.parse($_);
+        #for @contents {
+            my $parsed = zedram_grammar_core.parse($f);
             # All methods for keywords presented will be executed
-            analyze($parsed, %map);
-        }
+            #analyze($parsed, %map);
+            #}
+                say $parsed.perl;
         # get framework declaration
         #   get includes
         #   get methods
@@ -114,7 +136,6 @@ class ZedramParser is ZedramGrammar is ZedramSemantics is export {
         $t ~~ s:g/_//;
         $v ~~ s:i/NONE$//;
         $_ = GrammarDelimiter();
-say $t~ $v.substr(($_.chars/2)+1);
         ParserProperty($t, $v.substr(($_.chars/2)+1));
     }
 }

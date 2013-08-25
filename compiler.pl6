@@ -4,13 +4,15 @@
 
 use Zedram::Parser;
 
-my $grammarFile = "examples/grammar.zyg";
+#my $grammarFile = "examples/grammar.zyg";
 my $testFile = "examples/html_doc.zdrm";
 
-my $zedramParser = ZedramParser.new(:grammarFile($grammarFile));
+#my $zedramParser = ZedramParser.new(:grammarFile($grammarFile));
+my $zedramParser = ZedramParser.new();
+escape('test');
 $zedramParser.test();
 
 # Eventually:
-$zedramParser.read($testFile);
+$zedramParser.expand($testFile);
 # # Compiler!
 # $zedramParser.compileTo("html"); # or $zedramParser.compileTo("xml");
