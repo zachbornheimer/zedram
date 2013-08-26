@@ -34,8 +34,11 @@ class ZedramParser is ZedramGrammar is ZedramSemantics is export {
 
     method expand($file) {
 
+        # Everything is explained here: http://zysys.org/wiki/index.php/Zedram:_Dynamic_Parse_Trees
+
         # Purpose is to expand the compressed Zedram file
         # Add curly braces where necessary
+        # Add parentheses for methods if omitted
         # Replace mappings,
         # compress blocks
         #   compress blocks so that they can be passes in analyze()
@@ -46,9 +49,16 @@ class ZedramParser is ZedramGrammar is ZedramSemantics is export {
         $!zedramFilename = $file;
         my $f = slurp $!zedramFilename;
 
-        $f ~~ s:g/<{~ParserProperty('LineEndingDelimiter')}>*(<{~escape(~ParserProperty('BlockDelimiter').substr(0, ~ParserProperty('BlockDelimiter').chars / 2 ))}>)<{~ParserProperty('LineEndingDelimiter')}>*/$0/;
-        #$f ~~ s:g/<{~ParserProperty('LineEndingDelimiter')}>*(<{~escape(~ParserProperty('BlockDelimiter').substr(ParserProperty('BlockDelimiter').chars / 2 ))}>)<{~ParserProperty('LineEndingDelimiter')}>*/$0/;
-        $f.say;
+        if ~ParserProperty('BlockDelimiter') ne 'WHITESPACE' {
+            #$f ~~ s:g/<{~ParserProperty('LineEndingDelimiter')}>*(<{~escape(~ParserProperty('BlockDelimiter').substr(0, ~ParserProperty('BlockDelimiter').chars / 2 ))}>)<{~ParserProperty('LineEndingDelimiter')}>*/$0/;
+            #$f ~~ s:g/<{~ParserProperty('LineEndingDelimiter')}>/;/; # use semicolons to allow for merging of lines in blocks;
+            #while ( $f ~~ s:g/\s\s/ / ) { 1 }; # remove supurflous spaces
+
+            my @tree = assemble_parse_tree($f);
+            say @tree.perl;
+            $f.say;
+        }
+
 
         # Add Semicolons at the end of blocks if they do not exist
 
@@ -84,7 +94,61 @@ class ZedramParser is ZedramGrammar is ZedramSemantics is export {
 
     }
 
+    sub assemble_parse_tree($code) {
+        # Space is the delimiter
+        # if block, open an array
+        # if close block, close array
 
+        my @tree;
+        my @blockReferences;
+
+        # We are going move all blocks to @blockReferences and replace them with
+        # literal substitutions of @blockReferences[i] where i is the index.
+        # The purpose of this is to simplify parsing trees down to replacing blocks with static
+        #   refs to those blocks to allow for top level parsing and then we can keep parsing each block
+        #   reference until there are no blocks left to parse.
+
+        my $codeToParse = $code;
+        say $code.perl;
+        my $codeToParseIndex = 0;
+        my $blockReferencesIndex = 0;
+        my @codeToParse;
+        {
+            my @chars = $codeToParse.split('');
+            my $addToBlock = 0;
+            for 0 .. @chars.elems - 1 {
+                if @chars[0] eq ~ParserProperty('LineEndingDelimiter') {
+                    if $addToBlock {
+                        @blockReferences[$blockReferencesIndex] ~= @chars[0];
+                    } else {
+                        @codeToParse[$codeToParseIndex] ~= @chars[0];
+                    }
+                    $codeToParseIndex += 1;
+                } elsif @chars[0] eq ~ParserProperty('BlockDelimiter').substr(0,~ParserProperty('BlockDelimiter').chars/2) {
+                    $addToBlock = 1;
+                    @codeToParse[$codeToParseIndex] ~= '@blockReferences['~$blockReferencesIndex~']';
+                    @blockReferences[$blockReferencesIndex] ~= @chars[0];
+                } elsif @chars[0] eq ~ParserProperty('BlockDelimiter').substr(~ParserProperty('BlockDelimiter').chars/2) {
+                    $addToBlock = 0;
+                    @blockReferences[$blockReferencesIndex] ~= @chars[0];
+                    $blockReferencesIndex += 1;
+                } else {
+                    if $addToBlock {
+                        @blockReferences[$blockReferencesIndex] ~= @chars[0];
+                    } else {
+                        @codeToParse[$codeToParseIndex] ~= @chars[0];
+                    }
+                }
+                shift @chars;
+            }
+        }
+
+        # INCOMPLETE!
+
+        say @codeToParse.perl;
+        say @blockReferences.perl;
+        return @tree;
+    }
 
     method compileTo($lang) {
         # XML and HTML so far

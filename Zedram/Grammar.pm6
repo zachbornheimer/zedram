@@ -11,7 +11,7 @@ class ZedramGrammar is export {
     # These are overidden by options parsed in the supplied grammar (unless it isn't supplied) 
     GrammarDelimiter('->');
     ParserProperty('ParserDelimiter', ':');
-    ParserProperty('LineEndingDelimiter', '\n');
+    ParserProperty('LineEndingDelimiter', "\n");
     ParserProperty('BlockDelimiter', '{}');
     ParserProperty('ConcatenationSymbol', '.');
     ParserProperty('VarPrefix', '$');
@@ -64,7 +64,7 @@ class ZedramGrammar is export {
         token delimiter { : }
         token argument { \:.*? }
         token declaration { <keyword> (<modifier>|.*) }
-        token statement { <keyword>(.*)$ }
+        token statement { <keyword>(<block> || .*)<{&ParserProperty('LineDelimiter')}> }
         proto token keyword {*}
         token keyword:sym<grammar> { <sym> }
         token keyword:sym<constants> { <sym> }
