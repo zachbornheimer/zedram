@@ -141,6 +141,21 @@ class ZedramParser is ZedramGrammar is ZedramSemantics is export {
                 }
                 shift @chars;
             }
+
+            # Build Tree w/ @blockReferences included
+            # Parse the tree and sub each @blockReferences for a tree-ized version of the block
+            
+            for @codeToParse {
+                # Structure:
+                #   %hash = [line_arg00] = [line_arg1, line_arg2],
+                #            [line_arg10] = [line_arg11, line_arg12],
+                #            ...
+                #            ;
+                #
+                #   @tree = %hash where index = lineNum
+
+                my %hash = ;
+            }
         }
 
         # INCOMPLETE!

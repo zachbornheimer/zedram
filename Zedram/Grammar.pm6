@@ -61,8 +61,8 @@ class ZedramGrammar is export {
         rule TOP {
             <statement>
         }
-        token delimiter { : }
-        token argument { \:.*? }
+        token delimiter { <{ParserProperty('ParserDelimiter')}> }
+        token argument { <{ParserProperty('ParserDelimiter')}>.*? }
         token declaration { <keyword> (<modifier>|.*) }
         token statement { <keyword>(<block> || .*)<{&ParserProperty('LineDelimiter')}> }
         proto token keyword {*}
